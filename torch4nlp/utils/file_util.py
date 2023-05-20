@@ -12,7 +12,7 @@ def read_txt(infile, delimeter=None, maxsplit=-1, remove_newline=True, cols=None
         num: number of lines that returned
     """
 
-    if cols is not None and type(cols) != list and type(cols) == int:
+    if cols is not None and type(cols) != list and type(cols) != int:
         raise RuntimeError('cols must be a list or integer')
     if not os.path.exists(infile):
         raise RuntimeError('file not existed: {}'.format(infile))
