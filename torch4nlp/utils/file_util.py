@@ -64,6 +64,11 @@ def load_txt(infile, delimeter='\t', maxsplit=-1, batch_size=10000, remove_newli
     """load text file
     """
 
+    if cols is not None and type(cols) != list and type(cols) != int:
+        raise RuntimeError('cols must be a list or integer')
+    if not os.path.exists(infile):
+        raise RuntimeError('file not existed: {}'.format(infile))
+        
     chunk = []
     for l in open(infile, 'r', encoding='utf8'):
         if remove_newline:
