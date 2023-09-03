@@ -2,7 +2,7 @@ import os
 
 
 def read_txt(infile, delimeter=None, maxsplit=-1, remove_newline=True, cols=None, line_limit=None):
-    """read text file
+    """读txt文件
     Args:
         infile: input file path
         delimiter
@@ -12,7 +12,7 @@ def read_txt(infile, delimeter=None, maxsplit=-1, remove_newline=True, cols=None
         num: number of lines that returned
     """
 
-    if cols is not None and type(cols) != list and type(cols) == int:
+    if cols is not None and type(cols) != list and type(cols) != int:
         raise RuntimeError('cols must be a list or integer')
     if not os.path.exists(infile):
         raise RuntimeError('file not existed: {}'.format(infile))
@@ -31,6 +31,32 @@ def read_txt(infile, delimeter=None, maxsplit=-1, remove_newline=True, cols=None
                 else:  # integer
                     l = l[cols]
         content.append(l)
+    return content
+
+
+def read_jsonl(infile, cols=None, line_limit=None):
+    """读jsonl文件
+
+    args:
+        cols: 字段, 类型是str或者list of string
+    """
+    
+    if cols is not None and type(cols) != list and type(cols) != str:
+        raise RuntimeError('cols must be string or list of string')
+    if not os.path.exists(infile):
+        raise RuntimeError('file not existed: {}'.format(infile))
+    
+    content = []
+    for l in open(infile, 'r', encoding='utf8'):
+        if line_limit is not None and len(content) >= line_limit:
+            break
+        lj = json.loads(l.rstrip('\n'))
+        if cols is not None:
+            if type(cols) == list:
+                lj = {c: lj.get(c) for c in cols}
+            else:  # string
+                lj = {c: lj.get(c)}
+        content.append(lj)
     return content
 
 
