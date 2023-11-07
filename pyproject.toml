@@ -4,8 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name='torch4nlp'
-version='0.0.8c5'
-long_description = 'torch4nlp is a library for nlp based on torch'
+version='0.0.8c6'
 authors = [
     {name="youngfoo", email="flyangovoyang@gmail.com"}
 ]
