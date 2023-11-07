@@ -1,19 +1,22 @@
 import os
+import pandas as pd
+import pyarrow.parquet as pq
+import json
 
 
 def read_txt(infile, delimeter=None, maxsplit=-1, remove_newline=True, cols=None, line_limit=None):
-    """读txt文件
+    """read text file
     Args:
-        infile: input file path
+        infile: input file
         delimiter
         maxsplit
         remove_newline
-        cols: list of index
-        num: number of lines that returned
+        cols: int or list of int
+        line_limit: number of lines that returned
     """
 
     if cols is not None and type(cols) != list and type(cols) != int:
-        raise RuntimeError('cols must be a list or integer')
+        raise RuntimeError('cols must be a list or an integer')
     if not os.path.exists(infile):
         raise RuntimeError('file not existed: {}'.format(infile))
 
@@ -35,10 +38,10 @@ def read_txt(infile, delimeter=None, maxsplit=-1, remove_newline=True, cols=None
 
 
 def read_jsonl(infile, cols=None, line_limit=None):
-    """读jsonl文件
+    """read jsonl file
 
     args:
-        cols: 字段, 类型是str或者list of string
+        cols: str or list of string
     """
     
     if cols is not None and type(cols) != list and type(cols) != str:
@@ -86,3 +89,35 @@ def load_txt(infile, delimeter='\t', maxsplit=-1, batch_size=10000, remove_newli
             chunk = []
     if chunk:
         yield chunk
+
+
+def load_parquet(infile):
+    data = []
+    df = pq.read_table(infile).to_pandas()
+    for index, row in df.iterrows():
+        json_row = row.to_json(force_ascii=False)
+        data.append(json.loads(json_row))
+    return data
+    
+
+def dump_to_file(data, outfile, **kwargs):
+    if outfile.endswith('.xlsx'):
+        with pd.ExcelWriter(outfile) as writer:
+            pd.DataFrame(data).to_excel(writer, **kwargs)
+    elif outfile.endswith('.jsonl'):
+        with open(outfile, 'w') as fout:
+            for x in data:
+                fout.write(json.dumps(x, ensure_ascii=False) + '\n')
+    elif outfile.endswith('.data') or outfile.endswith('.txt'):
+        with open(outfile, 'w') as fout:
+            for x in data:
+                fout.write(x + '\n')
+    elif outfile.endswith('.csv'):
+        pd.DataFrame(data).to_csv(outfile, **kwargs)
+    else:
+        raise RuntimeError('file type not support')
+
+
+if __name__ == '__main__':
+    data = [[1,2,3], ['a', 'b', 'c']]
+    dump_to_file(data, 'a.csv', index=None)
