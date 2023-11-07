@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name='torch4nlp'
-version='0.0.8c3'
+version='0.0.8c4'
 long_description_content_type="text/markdown"
 long_description=README
 authors = [
