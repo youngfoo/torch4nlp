@@ -104,7 +104,7 @@ def dump_to_file(data, outfile, **kwargs):
     if outfile.endswith('.xlsx'):
         with pd.ExcelWriter(outfile) as writer:
             pd.DataFrame(data).to_excel(writer, **kwargs)
-    elif outfile.endswith('.jsonl'):
+    elif outfile.endswith('.jsonl') or outfile.endswith('.json'):
         with open(outfile, 'w') as fout:
             for x in data:
                 fout.write(json.dumps(x, ensure_ascii=False) + '\n')
