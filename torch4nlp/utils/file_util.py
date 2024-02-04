@@ -114,6 +114,8 @@ def dump_to_file(data, outfile, **kwargs):
                 fout.write(x + '\n')
     elif outfile.endswith('.csv'):
         pd.DataFrame(data).to_csv(outfile, **kwargs)
+    elif outfile.endswith('.parquet'):
+        pd.DataFrame(data).to_parquet(outfile, **kwargs)
     else:
         raise RuntimeError('file type not support')
 
