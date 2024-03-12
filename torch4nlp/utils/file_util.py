@@ -37,8 +37,8 @@ def read_txt(infile, delimeter=None, maxsplit=-1, remove_newline=True, cols=None
     return content
 
 
-def read_jsonl(infile, cols=None, line_limit=None):
-    """read jsonl file
+def read_json(infile, cols=None, line_limit=None):
+    """read json file
 
     args:
         cols: str or list of string
@@ -58,7 +58,7 @@ def read_jsonl(infile, cols=None, line_limit=None):
             if type(cols) == list:
                 lj = {c: lj.get(c) for c in cols}
             else:  # string
-                lj = {c: lj.get(c)}
+                raise RuntimeError('cols must be list of keys')
         content.append(lj)
     return content
 
@@ -117,9 +117,4 @@ def dump_to_file(data, outfile, **kwargs):
     elif outfile.endswith('.parquet'):
         pd.DataFrame(data).to_parquet(outfile, **kwargs)
     else:
-        raise RuntimeError('file type not support')
-
-
-if __name__ == '__main__':
-    data = [[1,2,3], ['a', 'b', 'c']]
-    dump_to_file(data, 'a.csv', index=None)
+        raise RuntimeError('file type not support, currently only support .xlsx/.json/.jsonl/.data/.csv/.txt/.csv/.parquet')
