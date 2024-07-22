@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Document</title>  
+    <!-- 引入Bootstrap CSS -->  
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
+    <!-- 引入jQuery库 -->  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>  
+    <!-- 引入Bootstrap JavaScript -->  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>{{ blog_title }}</h1>
+        <div id='orig_content'>{{ blog_content }}</div>
+        <div id='render_content'></div>
+    </div>
+</body>
+<script>
+    window.onload = function() {
+        var markdown_content = document.getElementById('orig_content').innerText;
+        console.log(markdown_content);
+        var htmlContent = marked.marked(markdown_content);
+        console.log(htmlContent);
+        document.getElementById('render_content').innerHTML = htmlContent;
+    };
+</script>
+</html>
