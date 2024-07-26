@@ -4,7 +4,7 @@ logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(message)s')
 import sqlite3
 import sys
 sys.path = [r'C:\Users\owen\Documents\Projects\torch4nlp'] + sys.path
-print(sys.path)
+# print(sys.path)
 
 import json
 import re
@@ -90,11 +90,27 @@ def display_cs_blog(blog_name):
     if os.path.exists(f'templates/cs/{blog_name}.md'):
         logging.info('start to read file...')
         content = open(f'templates/cs/{blog_name}.md', 'r', encoding='utf8').read()
+        # parse title
+        title = None
+        p = 0
+        if content[:2] == '# ':
+            p = 2
+            while True:
+                p = p + 1
+                if p >= len(content) or (content[p] == '\n' and content[p+1] == '\n'):
+                    break
+            
+            if p >= len(content):  # no title
+                pass
+            else:
+                title = content[2:p].strip()
+                content = content[p+2:]
+        
         logging.info(json.dumps(content, ensure_ascii=False))
         return render_template(
             'cs/blog.html', 
             blog_id=blog_name, 
-            blog_title=blog_name, 
+            blog_title=title if title is not None else blog_name, 
             blog_content=json.dumps(content, ensure_ascii=False)
         )
     elif os.path.exists(f'templates/cs/{blog_name}.html'):
